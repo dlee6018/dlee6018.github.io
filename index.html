@@ -13,7 +13,7 @@
                 <a href="#about">About</a>
                 <a href="#experience">Experience</a>
                 <a href="#projects">Projects</a>
-                <!-- <a href="#notes">Notes</a> -->
+                <a href="blogs/index.html">Blogs</a>
             </div>
             <button class="theme-toggle" aria-label="Toggle dark mode">
                 <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg>
@@ -153,9 +153,9 @@
             <div class="project" data-tags="research featured">
                 <div class="project-header">
                     <span class="project-title">GPT from Scratch</span>
-                    <!-- <a href="https://github.com/dlee6018" target="_blank" class="project-link" aria-label="View project">
+                    <a href="blogs/luna-gpt.html" class="project-link" aria-label="Read blog post">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-                    </a> -->
+                    </a>
                 </div>
                 <ul class="project-desc">
                     <li>Implemented a transformer language model from scratch using multi-head self-attention, RoPE positional embeddings, and FlashAttention</li>
@@ -327,6 +327,25 @@
                 emailToggle.innerHTML = 'dlee6018@gmail.com';
             }
             emailShowing = !emailShowing;
+        });
+
+        // Fix anchor link scrolling to account for fixed header
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                if (href === '#') return;
+                
+                const target = document.querySelector(href);
+                if (target) {
+                    e.preventDefault();
+                    const headerHeight = document.querySelector('header').offsetHeight;
+                    const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - headerHeight - 10;
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            });
         });
     </script>
 </body>
