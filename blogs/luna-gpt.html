@@ -9,7 +9,16 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" media="(prefers-color-scheme: dark)">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
     <style>
         .blog-container {
             max-width: 700px;
@@ -79,18 +88,121 @@
             font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
         }
 
-        .blog-content pre {
-            background: var(--bg-secondary);
+        .code-wrapper {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .code-wrapper pre {
+            background: #1e1e1e;
             border: 1px solid var(--border);
             border-radius: 6px;
-            padding: 1rem;
+            padding: 1.25rem;
             overflow-x: auto;
-            margin-bottom: 1.5rem;
+            margin: 0;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+        }
+
+        [data-theme="dark"] .code-wrapper pre {
+            background: #1a1a1a;
+            border-color: #333;
+        }
+
+        [data-theme="light"] .code-wrapper pre {
+            background: #f8f8f8;
+            border-color: #e0e0e0;
         }
 
         .blog-content pre code {
             background: none;
             padding: 0;
+            color: #e8e8e8;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', monospace;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+            font-weight: 400;
+        }
+
+        [data-theme="dark"] .blog-content pre code {
+            color: #e8e8e8;
+            text-shadow: 0 0 0 transparent;
+        }
+
+        [data-theme="light"] .blog-content pre code {
+            color: #2d2d2d;
+            font-weight: 400;
+        }
+
+        /* Override Prism operator highlighting */
+        .blog-content pre code .token.operator,
+        .blog-content pre code .token.punctuation {
+            color: inherit;
+            background: transparent;
+        }
+
+        [data-theme="dark"] .blog-content pre code .token.operator,
+        [data-theme="dark"] .blog-content pre code .token.punctuation {
+            color: #e8e8e8;
+        }
+
+        [data-theme="light"] .blog-content pre code .token.operator,
+        [data-theme="light"] .blog-content pre code .token.punctuation {
+            color: #2d2d2d;
+        }
+
+        .copy-button {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            color: #e8e8e8;
+            padding: 0.4rem 0.75rem;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+            font-weight: 500;
+        }
+
+        [data-theme="light"] .copy-button {
+            background: rgba(0, 0, 0, 0.05);
+            border-color: rgba(0, 0, 0, 0.1);
+            color: #666;
+        }
+
+        .copy-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+        }
+
+        [data-theme="light"] .copy-button:hover {
+            background: rgba(0, 0, 0, 0.1);
+            color: #333;
+        }
+
+        .copy-button:active {
+            transform: scale(0.95);
+        }
+
+        .copy-button.copied {
+            background: #4caf50;
+            border-color: #4caf50;
+            color: #fff;
+        }
+
+        [data-theme="light"] .copy-button.copied {
+            background: #4caf50;
+            color: #fff;
         }
 
         .blog-content blockquote {
@@ -99,11 +211,6 @@
             margin: 1.5rem 0;
             color: var(--text-muted);
             font-style: italic;
-        }
-
-        .mermaid {
-            margin: 2rem 0;
-            text-align: center;
         }
 
         .back-link {
@@ -120,9 +227,107 @@
             text-decoration: none;
         }
 
-        [data-theme="dark"] .blog-content pre {
-            background: #1e1e1e;
+        .toc-section {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: var(--bg-secondary);
+            border-radius: 6px;
+            border: 1px solid var(--border);
         }
+
+        .toc-section h2 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text);
+        }
+
+        .toc-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .toc-nav a {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            transition: color 0.2s;
+            text-decoration: none;
+        }
+
+        .toc-nav a:hover {
+            color: var(--link);
+        }
+
+        .github-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--link);
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+            text-decoration: none;
+            transition: opacity 0.2s;
+        }
+
+        .github-link:hover {
+            opacity: 0.8;
+            text-decoration: underline;
+        }
+
+        .github-link svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .formula-block {
+            margin: 1.5rem 0;
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            text-align: center;
+            font-family: 'Times New Roman', serif;
+        }
+
+        .formula-block span {
+            font-size: 1.1rem;
+        }
+
+        .formula-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .formula-item {
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .formula-item h4 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--text);
+        }
+
+        .formula-item .formula {
+            font-family: 'Times New Roman', serif;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        @media (max-width: 600px) {
+            .formula-comparison {
+                grid-template-columns: 1fr;
+            }
+        }
+
     </style>
 </head>
 <body>
@@ -154,17 +359,31 @@
                     <div class="blog-post-meta">
                         <time datetime="2024-01-15">January 3, 2026</time>
                     </div>
+                    <a href="https://github.com/dlee6018/luna-gpt" target="_blank" class="github-link" rel="noopener noreferrer">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                        View on GitHub
+                    </a>
+                </div>
+
+                <div class="toc-section">
+                    <h2>Table of Contents</h2>
+                    <nav class="toc-nav">
+                        <a href="#architecture-overview">Architecture Overview</a>
+                        <a href="#rmsnorm">RMSNorm</a>
+                        <a href="#attention">Multi-Head Attention</a>
+                        <a href="#rope">RoPE Positional Embeddings</a>
+                        <a href="#swiglu">SwiGLU Feed-Forward</a>
+                        <a href="#key-learnings">Key Learnings & Reflection</a>
+                    </nav>
                 </div>
 
                 <div class="blog-content">
                     <p>
-                        Over the past few months, I've been working on implementing a transformer language model from scratch. 
-                        This project has been an incredible learning experience, taking me through the entire machine learning 
-                        pipeline from architecture design to distributed training. In this post, I'll share some of the key 
-                        insights and challenges I encountered.
+                        Over the past few months, I've been doing a deep dive on the transformer. In this project, I've implemented a modern LLaMA-style version of GPT.
+                        In this post, I'll share some of the key insights and challenges I encountered, specifically focusing on pretraining and model architecture.
                     </p>
 
-                    <h2>Architecture Overview</h2>
+                    <h2 id="architecture-overview">Architecture Overview</h2>
                     <p>
                         The core of the model follows the transformer architecture introduced in "Attention Is All You Need", 
                         but with several modern improvements:
@@ -173,185 +392,302 @@
                     <ul>
                         <li><strong>Multi-head self-attention</strong> with scaled dot-product attention</li>
                         <li><strong>RoPE (Rotary Position Embeddings)</strong> instead of learned positional encodings</li>
+                        <li><strong>SwiGLU and gated linear units</strong> instead of ReLU</li>
+                        <li><strong>RMSNorm</strong> instead of Layer Normalization</li>
                         <li><strong>FlashAttention</strong> for memory-efficient attention computation</li>
-                        <li><strong>Layer normalization</strong> and residual connections throughout</li>
                     </ul>
 
+                    
+
+                    <h2 id="attention">Multi-Head Attention</h2>
                     <p>
-                        Here's a high-level view of the transformer block:
+                        The attention mechanism is the heart of the transformer. This part of the model remains nearly identical 
+                        to the original transformer. For the sake of completeness, I'll discuss multi-head attention here.
                     </p>
 
-                    <div class="mermaid">
-                        graph TD
-                            A[Input Embeddings] --> B[Multi-Head Attention]
-                            B --> C[Add & Norm]
-                            A --> C
-                            C --> D[Feed Forward]
-                            D --> E[Add & Norm]
-                            C --> E
-                            E --> F[Output]
+                    <p>
+                        The key idea of this component is to enhance the semantic representation of the input by allowing the 
+                        model to interact with past tokens. Attention is computed by the following formula:
+                    </p>
+
+                    <div class="formula-block">
+                        <span>
+                            $$\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right) V$$
+                        </span>
                     </div>
 
-                    <h2>Multi-Head Attention Implementation</h2>
                     <p>
-                        The attention mechanism is the heart of the transformer. Here's a simplified version of the 
-                        multi-head attention implementation:
+                        In the attention mechanism, $Q$ (Query) represents the search intent, $K$ (Key) acts as the indexing 
+                        attribute, and $V$ (Value) contains the actual information. This effectively functions as a soft 
+                        dictionary lookup where the dot product $QK^T$ determines the relevance weight for each token's value.
                     </p>
 
-                    <pre><code class="language-python">class MultiHeadAttention(nn.Module):
-    def __init__(self, d_model, num_heads):
+                    <p>
+                        The raw scores are scaled by $1/\sqrt{d_k}$ because the dot product involves summing $d_k$ pairs of 
+                        independent random variables, which naturally scales the variance by $d_k$. Since variance scales 
+                        quadratically ($\text{Var}(aX) = a^2\text{Var}(X)$), dividing the logits by $\sqrt{d_k}$ perfectly 
+                        counteracts this growth to normalize the variance back to 1, preventing softmax saturation.
+                    </p>
+
+                    <div class="formula-block">
+                        <span>
+                            $$\text{Var}(aX) = a^2\text{Var}(X)$$
+                        </span>
+                    </div>
+
+                    <p>
+                        Finally, Multi-Head Attention splits this process across parallel subspaces, allowing the model to 
+                        simultaneously capture distinct linguistic relationships—such as local positioning, syntactic dependencies, 
+                        and semantic contexts—without averaging conflicting signals into a single, muddy representation.
+                    </p>
+
+                    <div class="code-wrapper">
+                        <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-python">class MultiHeadAttention(nn.Module):
+    def __init__(self, config: GPTConfig):
         super().__init__()
-        self.d_model = d_model
-        self.num_heads = num_heads
-        self.d_k = d_model // num_heads
-        
-        self.W_q = nn.Linear(d_model, d_model)
-        self.W_k = nn.Linear(d_model, d_model)
-        self.W_v = nn.Linear(d_model, d_model)
-        self.W_o = nn.Linear(d_model, d_model)
-        
-    def forward(self, x, mask=None):
-        batch_size, seq_len, d_model = x.size()
-        
-        # Project to Q, K, V
-        Q = self.W_q(x).view(batch_size, seq_len, self.num_heads, self.d_k).transpose(1, 2)
-        K = self.W_k(x).view(batch_size, seq_len, self.num_heads, self.d_k).transpose(1, 2)
-        V = self.W_v(x).view(batch_size, seq_len, self.num_heads, self.d_k).transpose(1, 2)
-        
-        # Scaled dot-product attention
-        scores = torch.matmul(Q, K.transpose(-2, -1)) / math.sqrt(self.d_k)
-        
-        if mask is not None:
-            scores = scores.masked_fill(mask == 0, -1e9)
-        
-        attn_weights = F.softmax(scores, dim=-1)
-        attn_output = torch.matmul(attn_weights, V)
-        
-        # Concatenate heads
-        attn_output = attn_output.transpose(1, 2).contiguous().view(
-            batch_size, seq_len, d_model
-        )
-        
-        return self.W_o(attn_output)</code></pre>
+        self.n_head = config.n_head
+        self.d_model = config.d_model
+        self.d_head = config.d_head  # dimension per head
 
-                    <h2>RoPE Positional Embeddings</h2>
-                    <p>
-                        Instead of learned positional embeddings, I implemented Rotary Position Embeddings (RoPE), which 
-                        encode relative position information directly into the attention mechanism. This has become the 
-                        standard for modern language models like LLaMA and GPT-NeoX.
-                    </p>
+        # Project to q, k, v (full projection)
+        self.q = nn.Linear(self.d_model, self.d_model, bias=False)
+        self.k = nn.Linear(self.d_model, self.d_model, bias=False)
+        self.v = nn.Linear(self.d_model, self.d_model, bias=False)
 
-                    <p>
-                        RoPE works by rotating the query and key vectors by an angle that depends on their position:
-                    </p>
+        # Output projection back to d_model
+        self.Wo = nn.Linear(self.d_model, self.d_model, bias=False)
 
-                    <pre><code class="language-python">def apply_rotary_pos_emb(q, k, cos, sin):
-    """Apply rotary position embedding to query and key tensors."""
-    def rotate_half(x):
-        x1, x2 = x.chunk(2, dim=-1)
-        return torch.cat([-x2, x1], dim=-1)
-    
-    cos = cos.unsqueeze(1)  # [seq_len, 1, d_head]
-    sin = sin.unsqueeze(1)
-    
-    q_embed = (q * cos) + (rotate_half(q) * sin)
-    k_embed = (k * cos) + (rotate_half(k) * sin)
-    
-    return q_embed, k_embed</code></pre>
+        # RoPE
+        self.rope = RotaryEmbedding(config.d_head)
 
-                    <h2>Training Pipeline</h2>
-                    <p>
-                        Building the model was only half the battle. I implemented a complete training pipeline with three stages:
-                    </p>
+    def forward(self, x):
+        B, T, D = x.shape
 
-                    <h3>1. Pretraining</h3>
-                    <p>
-                        Large-scale pretraining on a diverse corpus of text data. This stage teaches the model general 
-                        language understanding and generation capabilities.
-                    </p>
+        # Compute q,k,v
+        q = self.q(x)  # (B, T, D)
+        k = self.k(x)
+        v = self.v(x)
 
-                    <h3>2. Supervised Fine-Tuning (SFT)</h3>
-                    <p>
-                        Fine-tuning on instruction-following datasets to make the model more helpful and aligned with 
-                        user intent.
-                    </p>
+        # Reshape into heads: (B, n_head, T, d_head)
+        q = q.view(B, T, self.n_head, self.d_head).transpose(1, 2)
+        k = k.view(B, T, self.n_head, self.d_head).transpose(1, 2)
+        v = v.view(B, T, self.n_head, self.d_head).transpose(1, 2)
 
-                    <h3>3. Direct Preference Optimization (DPO)</h3>
-                    <p>
-                        Post-training using DPO to further align the model with human preferences without requiring a 
-                        separate reward model. This was particularly interesting because I studied how DPO behaves in 
-                        low-data, small-model regimes.
-                    </p>
+        q, k = self.rope(q, k)  # apply RoPE after reshaping
 
-                    <div class="mermaid">
-                        sequenceDiagram
-                            participant Data
-                            participant Model
-                            participant Optimizer
-                            
-                            Data->>Model: Batch of sequences
-                            Model->>Model: Forward pass
-                            Model->>Optimizer: Loss
-                            Optimizer->>Model: Gradient update
-                            Model->>Model: Next iteration
+        # PyTorch 2.0+ built-in Flash Attention / SDPA
+        out = F.scaled_dot_product_attention(
+            q, k, v,
+            is_causal=True   # autoregressive mask
+        )  # shape: (B, n_head, T, d_head)
+
+        # Merge heads back: (B, T, D)
+        out = out.transpose(1, 2).contiguous().view(B, T, D)
+
+        return self.Wo(out)</code></pre>
                     </div>
 
-                    <h2>Distributed Training</h2>
+                    <h2 id="rmsnorm">RMSNorm</h2>
                     <p>
-                        Training large language models requires multiple GPUs. I implemented multi-GPU training using 
-                        PyTorch's Distributed Data Parallel (DDP):
+                        Instead of Layer Normalization, I used RMSNorm (Root Mean Square Layer Normalization), which is simpler 
+                        and more efficient.
                     </p>
 
-                    <pre><code class="language-python">def setup_ddp():
-    torch.distributed.init_process_group(backend='nccl')
-    local_rank = int(os.environ['LOCAL_RANK'])
-    torch.cuda.set_device(local_rank)
-    
-    model = TransformerModel(config).to(local_rank)
-    model = DDP(model, device_ids=[local_rank])
-    
-    return model, local_rank</code></pre>
+                    <div class="formula-comparison">
+                        <div class="formula-item">
+                            <h4>Layer Normalization (LN)</h4>
+                            <div class="formula">
+                                <span>
+                                    $$\hat{x}_i = \frac{x_i - \mu}{\sqrt{\sigma^2 + \epsilon}}$$<br>
+                                    $$y_i = \gamma \hat{x}_i + \beta$$
+                                </span>
+                            </div>
+                            <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem;">
+                                where $\mu = \frac{1}{n}\sum_{i=1}^{n} x_i$<br>
+                                and $\sigma^2 = \frac{1}{n}\sum_{i=1}^{n} (x_i - \mu)^2$
+                            </p>
+                        </div>
+                        <div class="formula-item">
+                            <h4>RMSNorm</h4>
+                            <div class="formula">
+                                <span>
+                                    $$\hat{x}_i = \frac{x_i}{\text{RMS}(x)}$$<br>
+                                    $$y_i = \gamma \hat{x}_i$$
+                                </span>
+                            </div>
+                            <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem;">
+                                where $\text{RMS}(x) = \sqrt{\frac{1}{n}\sum_{i=1}^{n} x_i^2}$
+                            </p>
+                        </div>
+                    </div>
 
                     <p>
-                        Key challenges included:
+                        What are the main differences between LN and RMSNorm? Layer Normalization tries to keep the data at 
+                        zero mean and unit variance, while RMSNorm doesn't specifically do this. Precisely, RMSNorm normalizes 
+                        by the root mean square, meaning that it forces $\mathbb{E}[x^2] = 1$.
                     </p>
-                    <ul>
-                        <li>Gradient synchronization across GPUs</li>
-                        <li>Efficient distributed data loading</li>
-                        <li>Handling variable sequence lengths with padding</li>
-                        <li>Monitoring training metrics across processes</li>
-                    </ul>
 
-                    <h2>Key Learnings</h2>
+                    <p>
+                        Isn't it bad to not have zero mean and unit variance? It turns out that centering does almost nothing 
+                        for training stability. Centering the mean basically means that we're shifting the data, but transformers 
+                        are shift invariant. Additionally, with SwiGLU replacing ReLU, the idea of having a non-zero mean is 
+                        even less important. RMSNorm is also more efficient to compute because it doesn't require the mean and 
+                        variance calculations, so if it doesn't make a difference, the answer is clear.
+                    </p>
+
+                    <div class="code-wrapper">
+                        <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-python">class RMSNorm(nn.Module):
+    def __init__(self, dim, eps=1e-6):
+        super().__init__()
+        self.eps = eps
+        # learnable scale parameter
+        self.weight = nn.Parameter(torch.ones(dim))
+
+    def forward(self, x):
+        # Compute RMS along last dimension
+        # rms = sqrt(mean(x^2))
+        rms = x.norm(2, dim=-1, keepdim=True) / math.sqrt(x.size(-1))
+        return self.weight * (x / (rms + self.eps))</code></pre>
+                    </div>
+
+                    <h2 id="rope">RoPE Positional Embeddings</h2>
+                    <p>
+                        Instead of learned positional embeddings, I implemented Rotary Position Embeddings (RoPE). RoPE is a 
+                        type of positional encoding that encodes relative position information directly into the attention, as 
+                        opposed to absolute position. The key idea of RoPE is that position embeddings are a function of the 
+                        relative position between two tokens.
+                    </p>
+
+                    <p>
+                        How do we apply rotation to our vectors? We construct our rotation matrix by splitting our 
+                        $d$-dimensional vector into 2-dimensional pairs and then applying the rotation matrix to each of them. 
+                        Another important property is that we rotate in multiple ways based on the frequency of the position. 
+                        This is because we want to capture both long-range and short-range dependencies.
+                    </p>
+
+                    <p>
+                        For example, if we rotate little when positions are close, it would have a hard time capturing the 
+                        difference. If we rotate a lot, we would be able to capture close-range dependencies better, but our 
+                        long-range dependencies would be off. Therefore, we rotate in multiple ways based on the frequency of 
+                        the position so we can model both long-range and short-range dependencies.
+                    </p>
+
+                    <div class="code-wrapper">
+                        <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-python">class RotaryEmbedding(nn.Module):
+    """
+    Standard RoPE (Rotary Positional Embedding)
+    Used in LLaMA / Qwen / Mistral (without NTK scaling).
+    """
+    def __init__(self, dim, base=10000):
+        """
+        dim: rotary dimension (must be even), head dimension
+        base: frequency base (default 10,000, same as GPT/LLaMA)
+        """
+        super().__init__()
+        assert dim % 2 == 0
+        self.dim = dim
+
+        # Create inverse frequency: shape [dim/2]
+        inv_freq = 1.0 / (base ** (torch.arange(0, dim, 2).float() / dim))
+        self.register_buffer("inv_freq", inv_freq)  # stays on same device as model
+
+    def _compute_angles(self, seq_len, device, dtype):
+        """
+        Compute cos/sin for all positions.
+        returns: cos, sin with shape [seq_len, dim/2]
+        """
+        t = torch.arange(seq_len, device=device, dtype=self.inv_freq.dtype)
+        freqs = torch.einsum("i,j->ij", t, self.inv_freq)  # pos * inv_freq
+        cos = freqs.cos().to(dtype)
+        sin = freqs.sin().to(dtype)
+        return cos, sin
+
+    def apply_rotary(self, x, cos, sin):
+        """
+        Apply RoPE to x.
+        x:   [batch, heads, seq, dim]
+        cos: [seq, dim/2]
+        sin: [seq, dim/2]
+        """
+        # Split even / odd
+        x_part = x[..., ::2]
+        y_part = x[..., 1::2]
+
+        cos = cos[None, None, :, :]
+        sin = sin[None, None, :, :]
+
+        x_rot = x_part * cos - y_part * sin
+        y_rot = x_part * sin + y_part * cos
+
+        x_out = torch.stack((x_rot, y_rot), dim=-1)
+        return x_out.flatten(-2)
+
+    def forward(self, q, k):
+        seq_len = q.size(-2)
+        cos, sin = self._compute_angles(seq_len, q.device, q.dtype)
+        return self.apply_rotary(q, cos, sin), self.apply_rotary(k, cos, sin)</code></pre>
+                    </div>
+
+                    <h2 id="swiglu">SwiGLU Feed-Forward Network</h2>
+                    <p>
+                        The feed-forward network uses SwiGLU (Swish-Gated Linear Unit) activation instead of ReLU. How does 
+                        SwiGLU work? It's a combination of a linear layer and a gate. The gate uses the SiLU (Sigmoid Linear 
+                        Unit) activation function applied to one linear transformation, which is then multiplied element-wise 
+                        with another linear transformation.
+                    </p>
+
+                    <p>
+                        Why do we prefer SwiGLU over ReLU? ReLU is basically $\max(0, x)$, and the problem with this is that 
+                        all values $< 0$ are set to 0, causing neurons to become "dead." SwiGLU avoids this problem by never 
+                        quite setting the values to 0, allowing gradients to flow through even for negative inputs.
+                    </p>
+
+                    <p>
+                        In addition, SwiGLU acts as a gate for the linear layer, meaning that it can control what information 
+                        we want to pass through the network. We can think of $W_1$ as the activation gate and $W_3$ as the 
+                        regular linear layer. $W_2$ is the output layer primarily used for (1) dimensionality reduction and 
+                        (2) information retrieval, similar to the value projection in attention.
+                    </p>
+
+                    <div class="code-wrapper">
+                        <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-python">class FeedForward(nn.Module):
+    def __init__(self, config: GPTConfig):
+        super().__init__()
+        hidden = 4 * config.d_model  # standard hidden expansion
+
+        # SwiGLU = silu(W1x) * (W3x)
+        self.w1 = nn.Linear(config.d_model, hidden, bias=False)
+        self.w3 = nn.Linear(config.d_model, hidden, bias=False)
+        self.w2 = nn.Linear(hidden, config.d_model, bias=False)
+
+    def forward(self, x):
+        return self.w2(F.silu(self.w1(x)) * self.w3(x))</code></pre>
+                    </div>
+
+                    <h2 id="key-learnings">Key Learnings & Reflection</h2>
                     <p>
                         This project taught me a lot about the practical challenges of training language models:
                     </p>
 
                     <ul>
-                        <li><strong>KL regularization</strong> is crucial in RL-based post-training to prevent the model 
-                            from deviating too far from the base model</li>
-                        <li><strong>Reward model design</strong> requires careful thought about what signals to optimize for</li>
-                        <li><strong>Optimization stability</strong> becomes a major concern in low-data regimes where 
-                            standard techniques may not apply</li>
-                        <li><strong>Memory efficiency</strong> is paramount - FlashAttention was essential for training 
-                            longer sequences</li>
-                    </ul>
-
-                    <h2>Future Work</h2>
-                    <p>
-                        There's still much to explore. I'm particularly interested in:
-                    </p>
-                    <ul>
-                        <li>Experimenting with different attention mechanisms (e.g., grouped query attention)</li>
-                        <li>Implementing more sophisticated post-training techniques</li>
-                        <li>Scaling to larger model sizes and datasets</li>
-                        <li>Better understanding the dynamics of preference learning</li>
+                        <li><strong>Architecture choices matter:</strong> Modern improvements like RMSNorm, RoPE, and SwiGLU 
+                            make a significant difference in both training stability and final performance.</li>
+                        <li><strong>Memory efficiency is paramount:</strong> FlashAttention was essential for training longer 
+                            sequences and managing GPU memory constraints.</li>
+                        <li><strong>Implementation details:</strong> Small details like proper initialization, gradient clipping, 
+                            and learning rate scheduling can make or break training stability.</li>
+                        <li><strong>Pretraining is complex:</strong> Managing large-scale data pipelines, distributed training, 
+                            and monitoring training progress requires careful engineering.</li>
                     </ul>
 
                     <p>
-                        Building this from scratch has given me a deep appreciation for the engineering and research 
-                        that goes into modern language models. Every component, from the attention mechanism to the 
-                        distributed training infrastructure, requires careful design and implementation.
+                        Building this from scratch has given me a deep appreciation for the engineering and research that goes 
+                        into modern language models. Every component, from the attention mechanism to the training infrastructure, 
+                        requires careful design and implementation.
                     </p>
                 </div>
             </article>
@@ -382,29 +718,47 @@
             setTheme(!isDark);
         });
 
-        // Initialize Mermaid
-        mermaid.initialize({ 
-            startOnLoad: true,
-            theme: document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default',
-            themeVariables: {
-                primaryColor: '#0066cc',
-                primaryTextColor: '#333',
-                primaryBorderColor: '#0066cc',
-                lineColor: '#333',
-                secondaryColor: '#f5f5f5',
-                tertiaryColor: '#fff'
-            }
-        });
+        // Copy code function
+        function copyCode(button) {
+            const codeBlock = button.nextElementSibling;
+            const code = codeBlock.querySelector('code').innerText;
+            
+            navigator.clipboard.writeText(code).then(() => {
+                const originalText = button.textContent;
+                button.textContent = 'Copied!';
+                button.classList.add('copied');
+                
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.classList.remove('copied');
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy code:', err);
+                button.textContent = 'Failed';
+                setTimeout(() => {
+                    button.textContent = 'Copy';
+                }, 2000);
+            });
+        }
 
-        // Update Mermaid theme on toggle
-        const observer = new MutationObserver(() => {
-            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-            mermaid.initialize({ 
-                startOnLoad: false,
-                theme: isDark ? 'dark' : 'default'
+        // Fix anchor link scrolling to account for fixed header
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                if (href === '#') return;
+                
+                const target = document.querySelector(href);
+                if (target) {
+                    e.preventDefault();
+                    const headerHeight = document.querySelector('header').offsetHeight;
+                    const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - headerHeight - 10;
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+                }
             });
         });
-        observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
     </script>
 </body>
 </html>
