@@ -144,6 +144,27 @@ h2 {
     margin-bottom: 1rem;
 }
 
+/* Table of Contents */
+.toc-section {
+    margin-bottom: 2rem;
+}
+
+.toc-nav {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.toc-nav a {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    transition: color 0.2s;
+}
+
+.toc-nav a:hover {
+    color: var(--link);
+}
+
 /* Hero / Intro */
 .intro {
     display: flex;
