@@ -1,27 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>David Lee</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <header>
-        <nav>
-            <div class="nav-links">
-                <a href="#about">About</a>
-                <a href="#experience">Experience</a>
-                <a href="#projects">Projects</a>
-                <a href="blogs/index.html">Blogs</a>
-            </div>
-            <button class="theme-toggle" aria-label="Toggle dark mode">
-                <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg>
-                <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg>
-            </button>
-        </nav>
-    </header>
-<!-- test comment1 -->
+---
+title: David Lee
+description: Software engineer focused on large-scale distributed systems and machine learning. Portfolio, experience, and technical blog posts.
+layout: layouts/base.njk
+permalink: /
+---
     <main>
         <!-- Intro Section -->
         <section id="about">
@@ -159,18 +141,18 @@
             <h2>Projects</h2>
 
             <div class="project-filters">
-                <button class="filter-btn active" data-filter="all">All</button>
-                <button class="filter-btn" data-filter="featured">Featured</button>
-                <button class="filter-btn" data-filter="research">Research</button>
-                <button class="filter-btn" data-filter="ml">ML</button>
-                <button class="filter-btn" data-filter="systems">Systems</button>
-                <button class="filter-btn" data-filter="agents">Agents</button>
+                <button type="button" class="filter-btn active" data-filter="all">All</button>
+                <button type="button" class="filter-btn" data-filter="featured">Featured</button>
+                <button type="button" class="filter-btn" data-filter="research">Research</button>
+                <button type="button" class="filter-btn" data-filter="ml">ML</button>
+                <button type="button" class="filter-btn" data-filter="systems">Systems</button>
+                <button type="button" class="filter-btn" data-filter="agents">Agents</button>
             </div>
 
             <div class="project" data-tags="research featured">
                 <div class="project-header">
                     <span class="project-title">GPT from Scratch</span>
-                    <a href="blogs/luna-gpt.html" class="project-link" aria-label="Read blog post">
+                    <a href="/blogs/luna-gpt.html" class="project-link" aria-label="Read blog post">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
                     </a>
                 </div>
@@ -185,7 +167,7 @@
             <div class="project" data-tags="research featured">
                 <div class="project-header">
                     <span class="project-title">AlphaGo Chess</span>
-                    <a href="blogs/alpha-zero.html" class="project-link" aria-label="Read blog post">
+                    <a href="/blogs/alpha-zero.html" class="project-link" aria-label="Read blog post">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
                     </a>
                 </div>
@@ -298,7 +280,7 @@
         -->
     </main>
 
-    <script>
+<script>
         // Theme toggle
         const toggle = document.querySelector('.theme-toggle');
 
@@ -371,5 +353,3 @@
             });
         });
     </script>
-</body>
-</html>

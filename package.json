@@ -1,0 +1,14 @@
+{
+  "name": "portfolio",
+  "private": true,
+  "scripts": {
+    "build": "eleventy",
+    "start": "eleventy --serve",
+    "validate": "npm run build && linkinator _site --recurse --skip 'https://' && html-validate --config .htmlvalidate.json _site/index.html _site/blogs/index.html _site/404.html && node scripts/check-seo.js"
+  },
+  "devDependencies": {
+    "@11ty/eleventy": "^3.0.0",
+    "html-validate": "^8.24.2",
+    "linkinator": "^6.2.3"
+  }
+}
