@@ -23,9 +23,7 @@ npm validate
 
 ## Deploy
 
-Pushes to `main` build with Eleventy and deploy to GitHub Pages via GitHub Actions.
-
-After the first Actions deploy, set **Settings → Pages → Build and deployment → Source** to **GitHub Actions**.
+Pushes to `main` build with Eleventy and deploy to GitHub Pages via GitHub Actions (source: **GitHub Actions** in repo Settings → Pages).
 
 ## Adding a blog post
 
@@ -46,11 +44,6 @@ math: false
 ```
 
 2. Add the article HTML inside `<main>...</main>`.
-3. Push to `main`. The blog index and sitemap update automatically.
+3. Push to `main`. The blog index and [sitemap](https://davidyeihyunlee.com/sitemap.xml) update automatically.
 
-## Google Search Console (one-time)
-
-1. Add property for `https://davidyeihyunlee.com` in [Google Search Console](https://search.google.com/search-console).
-2. Submit sitemap: `https://davidyeihyunlee.com/sitemap.xml`
-3. Request indexing for `/blogs/` and individual posts.
-4. Verify social previews with [opengraph.xyz](https://www.opengraph.xyz).
+After deploy, optionally request indexing for the new URL in [Google Search Console](https://search.google.com/search-console). Social previews: [opengraph.xyz](https://www.opengraph.xyz).
