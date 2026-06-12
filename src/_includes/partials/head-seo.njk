@@ -1,0 +1,13 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% if title %}{{ title }}{% if title != site.name %} - {{ site.name }}{% endif %}{% else %}{{ site.name }}{% endif %}</title>
+{% if description %}<meta name="description" content="{{ description }}">{% endif %}
+<link rel="canonical" href="{{ site.url }}{{ page.url }}">
+<meta property="og:site_name" content="{{ site.name }}">
+<meta property="og:title" content="{{ title | default(site.name) }}">
+{% if description %}<meta property="og:description" content="{{ description }}">{% endif %}
+<meta property="og:url" content="{{ site.url }}{{ page.url }}">
+<meta property="og:type" content="{{ ogType | default('website') }}">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="{{ title | default(site.name) }}">
+{% if description %}<meta name="twitter:description" content="{{ description }}">{% endif %}

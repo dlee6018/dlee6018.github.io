@@ -1,0 +1,74 @@
+---
+title: Blogs
+description: Essays, thoughts, and deeper dives into machine learning, reinforcement learning, and systems engineering.
+layout: layouts/base.njk
+permalink: /blogs/
+---
+<style>
+    .blog-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .blog-item {
+        padding: 1.5rem;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        transition: border-color 0.2s;
+        display: block;
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .blog-item:hover {
+        border-color: var(--text-muted);
+    }
+
+    .blog-item-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .blog-item-title {
+        font-weight: 600;
+        font-size: 1.1rem;
+        color: var(--text);
+    }
+
+    .blog-item-date {
+        color: var(--text-faint);
+        font-size: 0.85rem;
+    }
+
+    .blog-item-desc {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        line-height: 1.6;
+    }
+</style>
+
+<main>
+    <section>
+        <h2>Blogs</h2>
+        <p class="notes-intro">Essays, thoughts, and deeper dives into topics I find interesting.</p>
+
+        <div class="blog-list">
+            {% for post in collections.postsSorted %}
+            <a href="{{ post.url }}" class="blog-item">
+                <div class="blog-item-header">
+                    <h3 class="blog-item-title">{{ post.data.title }}</h3>
+                    <span class="blog-item-date">{{ post.date | readableDate }}</span>
+                </div>
+                <p class="blog-item-desc">{{ post.data.description }}</p>
+            </a>
+            {% endfor %}
+        </div>
+    </section>
+</main>
+
+{% include "partials/theme-toggle.njk" %}

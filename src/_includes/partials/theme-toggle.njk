@@ -1,0 +1,17 @@
+<script>
+    const toggle = document.querySelector('.theme-toggle');
+
+    function setTheme(dark) {
+        document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+        localStorage.setItem('theme', dark ? 'dark' : 'light');
+    }
+
+    const saved = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    setTheme(saved ? saved === 'dark' : prefersDark);
+
+    toggle.addEventListener('click', () => {
+        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        setTheme(!isDark);
+    });
+</script>
